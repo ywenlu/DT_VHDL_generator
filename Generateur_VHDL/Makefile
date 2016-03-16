@@ -27,4 +27,4 @@ pdf :
 	pdflatex *.tex
 
 clean :
-	rm -f *.o *.tex *.csv *.vhd *.log *.aux *~ arbre
+	rm -f *.o *.tex *.csv *.vhd *.log *.aux *~ arbre *.pdf

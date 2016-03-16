@@ -33,6 +33,7 @@ int prof_max_global = 1;
 
 int compt = 0;
 
+
 /**
  * @fn int main (int argc, char** argv) 
  * @brief Programme principal, appeler le programme avec un fichier txt

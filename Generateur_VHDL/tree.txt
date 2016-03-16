@@ -1,0 +1,20 @@
+two  lesser than 3.035000000 (-Inf, 1.0)(2.120000000000, 1.0)(3.950000000000, 0.0)	 {1620}
+    |--- one  lesser than 2.205000000 (-Inf, 1.0)(2.070000000000, 1.0)(2.300000000000, 0.0)	 {821}
+    |    |--- two  lesser than 1.940000000 (-Inf, 1.0)(1.930000000000, 1.0)(1.950000000000, 0.0)	 {99} class is equal to 1.00 {13 ex.} class is equal to 2.00 {3 ex.}
+    |    |--- two  greater than 1.940000000 (1.930000000000, 0.0)(1.950000000000, 1.0)(Inf, 1.0)	 {99} class is equal to 2.00 {73 ex.} class is equal to 1.00 {10 ex.}
+    |--- one  greater than 2.205000000 (2.070000000000, 0.0)(2.300000000000, 1.0)(Inf, 1.0)	 {821} class is equal to 1.00 {680 ex.} class is equal to 2.00 {42 ex.}
+two  greater than 3.035000000 (2.120000000000, 0.0)(3.950000000000, 1.0)(Inf, 1.0)	 {1620}
+    |--- one  lesser than 3.820000000 (-Inf, 1.0)(3.250000000000, 1.0)(4.390000000000, 0.0)	 {799} class is equal to 2.00 {657 ex.} class is equal to 1.00 {51 ex.}
+    |--- one  greater than 3.820000000 (3.250000000000, 0.0)(4.390000000000, 1.0)(Inf, 1.0)	 {799}
+    |    |--- one  lesser than 4.385000000 (-Inf, 1.0)(4.380000000000, 1.0)(4.390000000000, 0.0)	 {91}
+    |    |    |--- two  lesser than 3.700000000 (-Inf, 1.0)(3.390000000000, 1.0)(4.000000000000, 0.0)	 {47} class is equal to 1.00 {18 ex.} class is equal to 2.00 {5 ex.}
+    |    |    |--- two  greater than 3.700000000 (3.390000000000, 0.0)(4.000000000000, 1.0)(Inf, 1.0)	 {47}
+    |    |    |    |--- one  lesser than 4.150000000 (-Inf, 1.0)(4.120000000000, 1.0)(4.160000000000, 0.0)	 {24}
+    |    |    |    |    |--- two  lesser than 4.060000000 (-Inf, 1.0)(4.000000000000, 1.0)(4.120000000000, 0.0)	 {19} class is equal to 1.00 {6 ex.} class is equal to 2.00 {3 ex.}
+    |    |    |    |    |--- two  greater than 4.060000000 (4.000000000000, 0.0)(4.120000000000, 1.0)(Inf, 1.0)	 {19}
+    |    |    |    |    |    |--- one  lesser than 4.115000000 (-Inf, 1.0)(4.110000000000, 1.0)(4.120000000000, 0.0)	 {10} class is equal to 2.00 {5 ex.} class is equal to 1.00 {2 ex.}
+    |    |    |    |    |    |--- one  greater than 4.115000000 (4.110000000000, 0.0)(4.120000000000, 1.0)(Inf, 1.0)	 {10} class is equal to 2.00 {2 ex.} class is equal to 1.00 {1 ex.}
+    |    |    |    |--- one  greater than 4.150000000 (4.120000000000, 0.0)(4.160000000000, 1.0)(Inf, 1.0)	 {24} class is equal to 2.00 {4 ex.} class is equal to 1.00 {1 ex.}
+    |    |--- one  greater than 4.385000000 (4.380000000000, 0.0)(4.390000000000, 1.0)(Inf, 1.0)	 {91}
+    |    |    |--- two  lesser than 4.600000000 (-Inf, 1.0)(4.590000000000, 1.0)(4.610000000000, 0.0)	 {44} class is equal to 1.00 {34 ex.} class is equal to 2.00 {4 ex.}
+    |    |    |--- two  greater than 4.600000000 (4.590000000000, 0.0)(4.610000000000, 1.0)(Inf, 1.0)	 {44} class is equal to 2.00 {4 ex.} class is equal to 1.00 {2 ex.}
