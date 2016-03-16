@@ -54,8 +54,8 @@
 typedef struct noeud {
 	char * label;		/**< Numero du noeud, unique pour chaque noeud */
 	char * feature;	/**< Nom du signal a  analyser */
-	int min;			/**< Valeur du changement de la pente (minimum) */
-	int max;			/**< Valeur du changement de la pente (maximum) */
+	float min;			/**< Valeur du changement de la pente (minimum) */
+	float max;			/**< Valeur du changement de la pente (maximum) */
 	int a;			/**< Coefficient direction de la fonction d'appartenance */
 	int b;			/**< Valeur Ã  l'origine de la fonction d'appartenance */
 	struct noeud * pere;/**< Pointeur sur le père */
@@ -120,7 +120,7 @@ typedef struct arbre {
  * @return Noeud cree
  */
 
-ptr_noeud create_noeud (char label[], char feature[], int min, int max, int a, int b);
+ptr_noeud create_noeud (char label[], char feature[], float min, float max, int a, int b);
 
 /**
  * @fn create_feuille (char label[], int yes, int no)

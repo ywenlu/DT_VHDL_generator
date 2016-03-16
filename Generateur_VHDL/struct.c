@@ -5,7 +5,7 @@
 
 #include "struct.h"
 
-ptr_noeud create_noeud (char label[], char feature[], int min, int max, int a, int b) {
+ptr_noeud create_noeud (char label[], char feature[], float min, float max, int a, int b) {
 	ptr_noeud tmp;
 
 	tmp = (ptr_noeud) malloc (sizeof (noeud));
