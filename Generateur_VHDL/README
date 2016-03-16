@@ -1,0 +1,31 @@
+Projet Carpe Diem
+
+Programme de generation de fichier VHDL
+
+Le dossier doit contenir les codes sources suivants :
+- main.c
+- struct.h, struct.c
+- iofile.h, iofile.c
+- component.h, component.c
+- construcA.h, construcA.c
+et un fichier 'Makefile'
+
+Pour la documentation du programme :
+ouvrir le fichier 'index.html' dans le repertoire 'html'
+
+Pour la compilation :
+invoquer la commande 'make all' pour compiler l'ensemble de fichiers presents
+
+Pour l'execution :
+le repertoire contient quelques exemples pour tester le programme
+utiliser la syntaxe suivante './arbre <fichier1> <fichier2> ...', il faut au moins un fichier
+le programme generera les fichiers VHDL correspond a l'arbre
+
+Pour la visualisation d'arbre de decision :
+utiliser la commande 'pdflatex <nom du fichier au format tex>' puis ouvrir le pdf correspondant
+
+
+auteur :
+Chengwu HUANG
+Electronique et Informatique 4
+Polytech Paris - UPMC

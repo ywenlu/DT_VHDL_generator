@@ -1,0 +1,38 @@
+*********************************************************
+Description 
+10/09/2012
+*********************************************************
+
+---------------------------
+Generateur_VHDL 
+---------------------------
+Il contient tous les fichiers de g¨¦n¨¦rateur pour g¨¦n¨¦rer les VHDL ¨¤ partir des fichiers d'arbre.
+
+
+---------------------------
+fichiers de test 
+---------------------------
+Il contient tous les fichiers de test pour arbre1, arbre2 et foret (les vhdl, les testbenchs, les fichiers 'hex' pour initialiser le ROM)
+
+Les fichiers VHDL ici ne sont pas parail que ceux qui sont g¨¦n¨¦r¨¦s par le g¨¦n¨¦rateur. Je prends le sortie de ROM comme l'entr¨¦e. En sortie, on obtient deux pourcentages: un pour les r¨¦sultats de Class1, l'autre pour Class2. 
+
+J'ai fait ces fichiers l¨¤ pour tester le fonctionnement de chaque partie de notre architecture.
+
+
+---------------------------
+interface RS232 : 
+---------------------------
+Il contient toutes les parties de l'interface de transfert. 
+
+baud_gen : g¨¦n¨¦rer la nouvelle horloge
+receiver : recevoir les donn¨¦es
+transmit : transmettre les donn¨¦es
+fifo : sauvegarder les donn¨¦es
+
+
+----------------------------
+documentation
+----------------------------
+Il contient la derni¨¨re version du rapport et des slides.
+
+

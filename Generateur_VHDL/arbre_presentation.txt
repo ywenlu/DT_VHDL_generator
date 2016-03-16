@@ -1,0 +1,19 @@
+Gdrmn $0.929$ lesser than 0.00(-Inf, 1.00)(0.00, 1.00)(0.00, 0.00)	 {58} 
+
+|--- Rdrmx $0.794$ lesser than 1.04(-Inf, 1.00)(1.03, 1.00)(1.05, 0.00)	 {46} la classe est equal to no {23 ex.} la classe est equal to yes {3 ex.} $0.516$ 
+
+|--- Rdrmx $0.794$ greater than 1.04(1.03, 0.00)(1.05, 1.00)(Inf, 1.00)	 {46} 
+
+|    |--- Hminx $0.971$ lesser than -0.37(-Inf, 1.00)(-0.42, 1.00)(-0.33, 0.00)	 {20} 
+
+|    |    |--- Rmaxx $0.961$ lesser than 0.72(-Inf, 1.00)(0.62, 1.00)(0.83, 0.00)	 {13} la classe est equal to no {4 ex.} la classe est equal to yes {1 ex.} $0.722$ 
+
+|    |    |--- Rmaxx $0.961$ greater than 0.72(0.62, 0.00)(0.83, 1.00)(Inf, 1.00)	 {13} la classe est equal to yes {7 ex.} la classe est equal to no {1 ex.} $0.544$ 
+
+|    |--- Hminx $0.971$ greater than -0.37(-0.42, 0.00)(-0.33, 1.00)(Inf, 1.00)	 {20} la classe est equal to no {7 ex.} $0.000$ 
+
+Gdrmn $0.929$ greater than 0.00(0.00, 0.00)(0.00, 1.00)(Inf, 1.00)	 {58} 
+
+|--- Rmaxx $0.811$ lesser than 1.00(-Inf, 1.00)(0.99, 1.00)(1.01, 0.00)	 {12} la classe est equal to no {3 ex.} la classe est equal to yes {2 ex.} $0.971$ 
+
+|--- Rmaxx $0.811$ greater than 1.00(0.99, 0.00)(1.01, 1.00)(Inf, 1.00)	 {12} la classe est equal to yes {7 ex.} $0.000$
