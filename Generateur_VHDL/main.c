@@ -72,8 +72,9 @@ int main(int argc, char** argv)
 	struct timeval tmp_time;
 	float fvalue[3];
 	//float fvalue[]={1.73,6.21,2.00};
-	int result;
+	//int result;
 	int ind,nb;//indicator of classification 1:right 0:false
+	ptr_combiner combineres;
 		
 	if (argc < 3 ) {
 		fprintf(stderr, "ERREUR : syntaxe\n"
@@ -168,10 +169,10 @@ int main(int argc, char** argv)
 		do {
 			fscanf(file_test,"%f,%f,%f",&fvalue[0],&fvalue[1],&fvalue[2]);
 			printf("\n =====================input = %f,%f,%f =========================\n",fvalue[0], fvalue[1], fvalue[2]);
-			result=prediction(tree,feature,fvalue);
-			ind = (fvalue[2]==result)?1:0;
+			combineres = prediction(tree,feature,fvalue);
+			ind = (fvalue[2]==combineres->result)?1:0;
+			fprintf(file_result,"%f,%f,%f,%d,%d\n",fvalue[0], fvalue[1], fvalue[2],combineres->result,ind);
 			nb = nb + ind;
-			fprintf(file_result,"%f,%f,%f,%d,%d\n",fvalue[0], fvalue[1], fvalue[2],result,ind);
 			i++;
 		} while (!feof(file_test)); // lecture ligne par ligne du fichier txt
 		printf("vvvvvvvvvvvvvvvvv  right rate=%f\n",nb/(i*1.0));

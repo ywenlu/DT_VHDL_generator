@@ -130,7 +130,7 @@ ptr_combiner create_combiner (ptr_feuilleagg leafagg) {
 	tmp->leafagg = leafagg;
 	tmp->leafc1 = NULL;
 	tmp->leafc2 = NULL;
-	
+	tmp->result = 0;
 	return tmp;
 }
 
@@ -174,122 +174,6 @@ void changeseuil(ptr_noeud *node, float value){
 
 
 int validation(ptr_arbre tree,char *feature[],float * fvalue){
-	ptr_feuille leaf; 
-	ptr_feuilleagg leafagg;
-	ptr_noeud tmpnode;
-	//int i=0;
-	char label[NB_CHAR]; //label of leaf
-	int l;// length of leaf label
-	short sens; // left child:1 right child:0
-	float tmpvalue; //input feature value
-	float tmpdeg;// apparence degree
-	int ind,result=0;
-	ptr_branch tmp_b;
-	ptr_feuilleagg tmpleafagg;
-	ptr_combiner allleafagg;
-	int c1,c2;
-	float mindeg; //min degree in one chemin
-	float aggc1,aggc2; // max degree of different class
-	aggc1=0;
-	aggc2=0;
-	mindeg=1; //min degree in one chemin. initialized with 1(maximum possible value)
-	//allleafagg = (ptr_feuilleagg) malloc (comp*sizeof (feuilleagg));
-	
-	leaf=tree->leaf; 
-	allleafagg=create_combiner (NULL);
-	while (leaf != NULL) { // iterate over all leaves
-		print_feuille(leaf);
-		leafagg=create_feuilleagg (leaf, mindeg);
-
-		strcpy(label,leaf->label);
-		l=strlen(label);
-		sens=(int)label[l-1]-(int)'0'; 
-		label[l-1]='\0';
-		feuillepere(tree->node,&tmpnode,label);
-
-		while (tmpnode != NULL){ // iterate over nodes:from leaf to root
-			print_noeud(tmpnode);
-			tmpvalue=getfvalue(tmpnode,feature,fvalue);
-			tmpdeg=appartenance (tmpnode, tmpvalue);
-			tmpdeg=(sens==0)?tmpdeg:(1-tmpdeg);
-			printf("tmpdeg=%f\n",tmpdeg);
-			tmp_b=create_branch (tmpnode, sens, tmpdeg);
-			leafagg->line=add_branch(leafagg->line, tmp_b);
-			if ( (leafagg->min) > tmpdeg ){
-				leafagg->min = tmpdeg;
-				leafagg->minnode = tmpnode;
-			}
-			printf("value=%f   mindeg=%f\n",tmpvalue,leafagg->min);
-			l=strlen(tmpnode->label);
-			sens=(int)label[l-1]-(int)'0'; 
-			tmpnode=tmpnode->pere;
-		}
-		
-		// fonction récurssive
-		leaf=leaf->suiv;
-		allleafagg->leafagg=add_feuilleagg (allleafagg->leafagg, leafagg);
-	}
-	
-	tmpleafagg=allleafagg->leafagg;
-	while(tmpleafagg!=NULL)
-	{
-		c1=(tmpleafagg->leaf)->yes;
-		c2=(tmpleafagg->leaf)->no;
-		printf("c1=%d  c2=%d\n",c1, c2);
-		mindeg=tmpleafagg->min;
-		
-		if (c1>=c2) {
-			if (aggc1<c1) 
-			{
-				aggc1=c1;
-				allleafagg->leafc1=tmpleafagg;
-			}
-		}
-		else {
-			if (aggc2<c2) 
-			{
-				aggc2=c2;
-				allleafagg->leafc2=tmpleafagg;
-			}
-		}
-		
-		tmpleafagg=tmpleafagg->suiv;
-	}
-		
-		if(aggc1 >= aggc2) 
-			result = 1;
-		else result = 2;
-			
-			//evalutation and adaptation 
-		
-		if (fvalue[3]!=result) {//quand mal classé
-			//printf("mal classé:%d\n",i++);
-			switch (result){
-				case 1:
-					tmpleafagg=allleafagg->leafc1;
-					if(tmpleafagg->min<1)
-					changeseuil(&(tmpleafagg->minnode),getfvalue(tmpleafagg->minnode,feature,fvalue));
-					break;
-				case 2:
-					tmpleafagg=allleafagg->leafc2;
-					if(tmpleafagg->min<1)
-					changeseuil(&(tmpleafagg->minnode),getfvalue(tmpleafagg->minnode,feature,fvalue));
-					break;
-				default:
-				printf("error");
-				
-			}
-			
-		}
-		
-		if (fvalue[3]!=result)
-		ind=1;
-		else
-		ind=0;
-		return ind;
-}
-	
-int prediction(ptr_arbre tree,char *feature[],float * fvalue){
 	ptr_feuille leaf; 
 	ptr_feuilleagg leafagg;
 	ptr_noeud tmpnode;
@@ -380,6 +264,136 @@ int prediction(ptr_arbre tree,char *feature[],float * fvalue){
 		else result = 2;
 		
 		return result;
+			
+			//evalutation and adaptation 
+		
+		if (fvalue[3]!=result) {//quand mal classé
+			//printf("mal classé:%d\n",i++);
+			switch (result){
+				case 1:
+					tmpleafagg=allleafagg->leafc1;
+					if(tmpleafagg->min<1)
+					changeseuil(&(tmpleafagg->minnode),getfvalue(tmpleafagg->minnode,feature,fvalue));
+					break;
+				case 2:
+					tmpleafagg=allleafagg->leafc2;
+					if(tmpleafagg->min<1)
+					changeseuil(&(tmpleafagg->minnode),getfvalue(tmpleafagg->minnode,feature,fvalue));
+					break;
+				default:
+				printf("error");
+				
+			}
+			
+		}
+		
+		
+}
+void adaption(ptr_combiner combineres,char *feature[],float * fvalue){
+		int value;
+		ptr_noeud node;
+		node = (combineres->leafc)->minnode;
+		value = getfvalue(node, feature, fvalue);
+		changeseuil(&node,value);
+	}
+ptr_combiner prediction(ptr_arbre tree,char *feature[],float * fvalue){
+	ptr_feuille leaf; 
+	ptr_feuilleagg leafagg;
+	ptr_noeud tmpnode;
+	//int i=0;
+	char label[NB_CHAR]; //label of leaf
+	int l;// length of leaf label
+	short sens; // left child:1 right child:0
+	float tmpvalue; //input feature value
+	float tmpdeg;// apparence degree
+	ptr_branch tmp_b;
+	ptr_feuilleagg tmpleafagg;
+	ptr_combiner allleafagg;
+	int c1,c2;
+	float mindeg; //min degree in one chemin
+	float aggc1,aggc2; // max degree of different class
+
+	aggc1=0;
+	aggc2=0;
+	c1=0;
+	c2=0;
+	mindeg=1; //min degree in one chemin. initialized with 1(maximum possible value)
+	//allleafagg = (ptr_feuilleagg) malloc (comp*sizeof (feuilleagg));
+	
+	leaf=tree->leaf; 
+	allleafagg=create_combiner (NULL);
+	while (leaf != NULL) { // iterate over all leaves
+		print_feuille(leaf);
+		leafagg=create_feuilleagg (leaf, mindeg);
+
+		strcpy(label,leaf->label);
+		l=strlen(label);
+		sens=(int)label[l-1]-(int)'0'; 
+		label[l-1]='\0';
+		feuillepere(tree->node,&tmpnode,label);
+
+		while (tmpnode != NULL){ // iterate over nodes:from leaf to root
+			print_noeud(tmpnode);
+			tmpvalue=getfvalue(tmpnode,feature,fvalue);
+			tmpdeg=appartenance (tmpnode, tmpvalue);
+			tmpdeg=(sens==0)?tmpdeg:(1-tmpdeg);
+			printf("tmpdeg=%f\n",tmpdeg);
+			tmp_b=create_branch (tmpnode, sens, tmpdeg);
+			leafagg->line=add_branch(leafagg->line, tmp_b);
+			if ( (leafagg->min) > tmpdeg ){
+				leafagg->min = tmpdeg;
+				leafagg->minnode = tmpnode;
+			}
+			printf("value=%f   mindeg=%f\n",tmpvalue,leafagg->min);
+			l=strlen(tmpnode->label);
+			sens=(int)label[l-1]-(int)'0'; 
+			tmpnode=tmpnode->pere;
+		}
+		
+		// fonction récurssive
+		leaf=leaf->suiv;
+		allleafagg->leafagg=add_feuilleagg (allleafagg->leafagg, leafagg);
+	}
+	
+	tmpleafagg=allleafagg->leafagg;
+	while(tmpleafagg!=NULL)
+	{
+		c1=(tmpleafagg->leaf)->yes;
+		c2=(tmpleafagg->leaf)->no;
+		printf("c1=%d  c2=%d\n",c1, c2);
+		mindeg=tmpleafagg->min;
+		
+		if (c1>=c2) {
+			printf("1 yes class");
+			if (aggc1<tmpleafagg->min) 
+			{
+				aggc1=tmpleafagg->min;
+				allleafagg->leafc1=tmpleafagg;
+			}
+		}
+		else {
+			printf("2 no class");
+			if (aggc2<tmpleafagg->min) 
+			{
+				aggc2=tmpleafagg->min;
+				allleafagg->leafc2=tmpleafagg;
+			}
+		}
+		tmpleafagg=tmpleafagg->suiv;
+	}
+		
+		if(aggc1 >= aggc2) {
+			allleafagg->leafc= allleafagg->leafc1;
+			allleafagg->result = 1;
+			allleafagg->deg=aggc1;
+		}
+		else {
+			allleafagg->leafc= allleafagg->leafc2;
+			allleafagg->result = 2;
+			allleafagg->deg=aggc2;
+		}
+		
+		return allleafagg;
 }
 	
 

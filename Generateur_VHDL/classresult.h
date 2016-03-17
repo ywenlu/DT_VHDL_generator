@@ -39,14 +39,17 @@ typedef struct combiner {
 	struct feuilleagg * leafagg;	/**< Liste de noeuds */
 	struct feuilleagg * leafc1;
 	struct feuilleagg * leafc2;
-	struct feuilleagg * leafc3;
+	struct feuilleagg * leafc; // result class chemin
+	int result;
+	float deg;
 } combiner, * ptr_combiner;
 
 ptr_combiner create_combiner (ptr_feuilleagg leafagg);
 
 void feuillepere (ptr_noeud tete, ptr_noeud *pere, char *label);
 //ptr_noeud feuillepere (ptr_noeud tete, char *label);
-int prediction(ptr_arbre tree,char *feature[],float * fvalue);
+ptr_combiner prediction(ptr_arbre tree,char *feature[],float * fvalue);
 int validation(ptr_arbre tree,char *feature[],float * fvalue);
 void changeseuil(ptr_noeud *node, float value);
+void adaption(ptr_combiner combineres,char *feature[],float * fvalue);
 #endif
