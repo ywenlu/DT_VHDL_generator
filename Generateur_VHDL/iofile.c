@@ -157,7 +157,7 @@ ptr_arbre read_ligne (char * ligne, ptr_arbre tree, int reset) {
 				}
 				valeur[j] = '\0';
 				i++;
-				no = atoi(valeur);
+				yes = atoi(valeur);
 			}
 			if (ligne[i] == '2') {
 				i += 6;
@@ -168,7 +168,7 @@ ptr_arbre read_ligne (char * ligne, ptr_arbre tree, int reset) {
 				}
 				valeur[j] = '\0';
 				i++;
-				yes = atoi(valeur);
+				no = atoi(valeur);
 			}
 		}
 	}
@@ -199,14 +199,14 @@ ptr_arbre read_ligne (char * ligne, ptr_arbre tree, int reset) {
 
 
 void print_noeud (ptr_noeud node) {
-	printf ("label = %16s, feature = %8s, "
-			"min = %f, max = %f, a = %6d, b = %8d\n",
+	printf ("*node: label = %s, feature = %s, "
+			"min = %f, max = %f, a = %f, b = %f\n",
 		node->label, node->feature, node->min, node->max, node->a, node->b);
 }
 
 
 void print_feuille (ptr_feuille leaf) {
-	printf ("label = %s\t"
+	printf ("\n\n==leaf: label = %s\t"
 			"yes = %d, no = %d\n",
 		leaf->label, leaf->yes, leaf->no);
 }

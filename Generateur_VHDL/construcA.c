@@ -21,7 +21,7 @@ void tex_style (FILE * file) {
 			"\\tikzset{noeud/.style = {minimum width=1.8cm,minimum height=1.2cm,\n\t"
 			"text width=1.6cm,text badly ragged,\n\t"
 			"rectangle,rounded corners=5pt,draw,\n\t"
-			"fill=#1!25,font=\\tiny},\n\t"
+			"fill=#1!25,font=\\small},\n\t"
 			"noeud/.default={gray}}\n\n",
 		file);
 }

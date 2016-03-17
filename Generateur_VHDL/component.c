@@ -322,8 +322,8 @@ void vhdl_inst_mu_A (FILE * file, ptr_noeud node, char * entity) {
 
 		fprintf (file, "func%s : %s_mu_A\n\t"
 				"GENERIC MAP (\n\t\t"
-				"a => %d,\n\t\t"
-				"b => %d,\n\t\t"
+				"a => %f,\n\t\t"
+				"b => %f,\n\t\t"
 				"max => %f,\n\t\t"
 				"min => %f,\n\t\t"
 				"N => %d\n\t"

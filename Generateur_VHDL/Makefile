@@ -2,8 +2,8 @@
 
 all : arbre
 
-arbre : main.o struct.o iofile.o component.o construcA.o
-	gcc main.o struct.o iofile.o component.o construcA.o -o arbre
+arbre : main.o struct.o iofile.o component.o classresult.o construcA.o
+	gcc main.o struct.o iofile.o component.o classresult.o construcA.o -o arbre
 
 main.o : main.c iofile.h struct.h
 	gcc -Wall -c main.c
@@ -16,12 +16,15 @@ struct.o : struct.c struct.h
 
 component.o : component.c component.h struct.h
 	gcc -Wall -c component.c
-
+	
+classresult.o : classresult.c classresult.h struct.h iofile.h
+	gcc -Wall -c classresult.c
+	
 construcA.o : construcA.c construcA.h struct.h
 	gcc -Wall -c construcA.c
 
 run :
-	./arbre *.txt
+	./arbre *.txt *.txt
 
 pdf :
 	pdflatex *.tex

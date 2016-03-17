@@ -17,7 +17,7 @@
 #include "struct.h"
 #include "iofile.h"
 #include "component.h"
-
+#include "classresult.h"
 /**
  * @var profondeur_max
  * @brief Profondeur maximale d'un arbre
@@ -32,7 +32,8 @@ int profondeur_max = 1;
 int prof_max_global = 1;
 
 int compt = 0;
-
+int N=3;
+char *feature[]= {"one", "two", "class"};
 /**
  * @fn int main (int argc, char** argv) 
  * @brief Programme principal, appeler le programme avec un fichier txt
@@ -44,11 +45,14 @@ int main(int argc, char** argv)
 {
 	// Flux
 	FILE * file_txt;
+	FILE * file_test;
 	FILE * file_tex;
 	FILE * file_csv;
 	FILE * file_vhd;
+	FILE * file_result;
 	// Nom des fichiers à générer
 	char * fichier_txt;
+	char * fichier_test;
 	char * fichier_tex;
 	char * fichier_csv;
 	char * fichier_vhd;
@@ -59,44 +63,52 @@ int main(int argc, char** argv)
 	// Pointeur sur structure arbre
 	ptr_arbre tree;
 	// Variable intermédiaire
-	int i, j;
-	int nb_file;
+	int i;
+	//int nb_file;
 	// Recommencer avec un autre arbre si reset = 1
 	int reset;
 	// Calcul du temps d'execution
 	double start, end;
 	struct timeval tmp_time;
+	float fvalue[3];
+	//float fvalue[]={1.73,6.21,2.00};
+	int result;
+	int ind,nb;//indicator of classification 1:right 0:false
 		
-	if (argc < 2 ) {
+	if (argc < 3 ) {
 		fprintf(stderr, "ERREUR : syntaxe\n"
-				"Usage : ./arbre <fichier1.txt> <fichier2.txt> ...\n");
+				"Usage : ./arbre <fichier_arbre.txt> <fichier_test.txt> ...\n");
 		exit(EXIT_FAILURE);
 	}
 
 	gettimeofday(&tmp_time, NULL);
 	start = tmp_time.tv_sec + (tmp_time.tv_usec * 1.0e-6L);
 
-	nb_file = argc - 1;
+	//nb_file = argc - 1;
 
 	// allocation mémoire
 	fichier_txt = (char *) malloc (NB_FILE_NAME * sizeof(char));
+	fichier_test = (char *) malloc (NB_FILE_NAME * sizeof(char));
 	fichier_tex = (char *) malloc (NB_FILE_NAME * sizeof(char));
 	fichier_csv = (char *) malloc (NB_FILE_NAME * sizeof(char));
 	fichier_vhd = (char *) malloc (NB_FILE_NAME * sizeof(char));
 	entity = (char *) malloc (NB_FILE_NAME * sizeof(char));
 
 	// si erreur lors de l'allocation
-	if ((!fichier_txt) || (!fichier_tex) || (!fichier_csv) || (!fichier_vhd)) {
+	if ((!fichier_txt) || (!fichier_test) || (!fichier_tex) || (!fichier_csv) || (!fichier_vhd)) {
 		fprintf(stderr, "ERREUR : Mémoire insuffisante\n");
 		exit(EXIT_FAILURE);
 	}
 
 	// lire tous les fichiers txt dans le répertoire courant
-	for (j = 0; j < nb_file; j++) {
+	//for (j = 0; j < nb_file; j++) {
 	
-		fichier_txt = argv[j + 1];
+		fichier_txt = argv[1];
+		fichier_test = argv[2];
 	
 		file_txt = fopen(fichier_txt, "r"); // ouverture du fichier txt
+		file_test = fopen(fichier_test, "r"); // ouverture du fichier test
+		
 		if (!file_txt) {
 			fprintf(stderr, "ERREUR : Fichier '%s' non trouvé\n", fichier_txt);
 			exit(EXIT_FAILURE);
@@ -126,6 +138,8 @@ int main(int argc, char** argv)
 		file_csv = fopen(fichier_csv, "w+");
 		file_vhd = fopen(fichier_vhd, "w+");
 		
+		file_result = fopen("result.txt","a");
+		
 		if ((!file_tex) || (!file_csv) || (!file_vhd)) {
 			fprintf(stderr, "ERREUR : Impossible de générer les fichiers\n");
 			exit(EXIT_FAILURE);
@@ -133,7 +147,7 @@ int main(int argc, char** argv)
 	
 		tree = create_arbre (NULL, NULL); // initialiser un arbre vide
 
-		printf("Lecture du fichier '%s' en cours", fichier_txt);
+		printf("Création d'arbre: Lecture du fichier '%s' en cours", fichier_txt);
 	
 		reset = 1;
 		do {
@@ -146,7 +160,26 @@ int main(int argc, char** argv)
 			}
 			reset = 0;
 		} while (!feof(file_txt)); // lecture ligne par ligne du fichier txt
-	
+		
+		
+		
+		printf("test avec fichier '%s' en cours", fichier_test);
+		i=0;
+		do {
+			fscanf(file_test,"%f,%f,%f",&fvalue[0],&fvalue[1],&fvalue[2]);
+			printf("\n =====================input = %f,%f,%f =========================\n",fvalue[0], fvalue[1], fvalue[2]);
+			result=prediction(tree,feature,fvalue);
+			ind = (fvalue[2]==result)?1:0;
+			nb = nb + ind;
+			fprintf(file_result,"%f,%f,%f,%d,%d\n",fvalue[0], fvalue[1], fvalue[2],result,ind);
+			i++;
+		} while (!feof(file_test)); // lecture ligne par ligne du fichier txt
+		printf("vvvvvvvvvvvvvvvvv  right rate=%f\n",nb/(i*1.0));
+		
+		
+		
+		
+		
 		putchar('\n');
 	
 		fputs ("label;feature;min;max\n", file_csv);
@@ -170,11 +203,11 @@ int main(int argc, char** argv)
 		tree = NULL;
 
 		// si erreur lors de la fermeture des fichiers
-		if (fclose(file_txt) || fclose(file_tex) || fclose(file_csv) || fclose(file_vhd)) {
+		if (fclose(file_txt) || fclose(file_test) || fclose(file_tex) || fclose(file_csv) || fclose(file_vhd)) {
 			fprintf(stderr, "ERREUR : Fermeture des fichiers\n");
 			exit(EXIT_FAILURE);
 		}
-	}
+	//}
 
 	for (i = 0; i < prof_max_global; i++) {
 		generate_min(i + 2, entity);
