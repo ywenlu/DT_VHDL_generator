@@ -65,7 +65,7 @@ ptr_feuille tex_noeud (FILE * file, ptr_noeud node, ptr_feuille leaf, int reset)
 		
 		fprintf (file,
 			"\\node[noeud] (n%s) at (%d,%d) {%s\\\\ %s\\\\ %.2f ; %.2f};\n",
-			node->label, DECAL_X * x, DECAL_Y * y, node->label, node->feature, node->min , node->max );
+			node->label, DECAL_X * x, DECAL_Y * y, node->label, node->feature, node->min / 100.0, node->max / 100.0);
 
 		leaf = tex_noeud (file, node->fils_g, leaf, 0);
 

@@ -45,6 +45,7 @@ int main(int argc, char** argv)
 {
 	// Flux
 	FILE * file_txt;
+	FILE * file_vad;
 	FILE * file_test;
 	FILE * file_tex;
 	FILE * file_csv;
@@ -52,6 +53,7 @@ int main(int argc, char** argv)
 	FILE * file_result;
 	// Nom des fichiers à générer
 	char * fichier_txt;
+	char * fichier_vad;
 	char * fichier_test;
 	char * fichier_tex;
 	char * fichier_csv;
@@ -73,12 +75,12 @@ int main(int argc, char** argv)
 	float fvalue[3];
 	//float fvalue[]={1.73,6.21,2.00};
 	//int result;
-	int ind,nb;//indicator of classification 1:right 0:false
+	int ind,nb,ares;//indicator of classification 1:right 0:false
 	ptr_combiner combineres;
 		
-	if (argc < 3 ) {
+	if (argc < 4 ) {
 		fprintf(stderr, "ERREUR : syntaxe\n"
-				"Usage : ./arbre <fichier_arbre.txt> <fichier_test.txt> ...\n");
+				"Usage : ./arbre <fichier_arbre.txt> <fichier_vad.txt> <fichier_test.txt> ...\n");
 		exit(EXIT_FAILURE);
 	}
 
@@ -89,6 +91,7 @@ int main(int argc, char** argv)
 
 	// allocation mémoire
 	fichier_txt = (char *) malloc (NB_FILE_NAME * sizeof(char));
+	fichier_vad = (char *) malloc (NB_FILE_NAME * sizeof(char));
 	fichier_test = (char *) malloc (NB_FILE_NAME * sizeof(char));
 	fichier_tex = (char *) malloc (NB_FILE_NAME * sizeof(char));
 	fichier_csv = (char *) malloc (NB_FILE_NAME * sizeof(char));
@@ -105,9 +108,11 @@ int main(int argc, char** argv)
 	//for (j = 0; j < nb_file; j++) {
 	
 		fichier_txt = argv[1];
-		fichier_test = argv[2];
+		fichier_vad = argv[2];
+		fichier_test = argv[3];
 	
 		file_txt = fopen(fichier_txt, "r"); // ouverture du fichier txt
+		file_vad = fopen(fichier_vad, "r"); // ouverture du fichier test
 		file_test = fopen(fichier_test, "r"); // ouverture du fichier test
 		
 		if (!file_txt) {
@@ -162,24 +167,43 @@ int main(int argc, char** argv)
 			reset = 0;
 		} while (!feof(file_txt)); // lecture ligne par ligne du fichier txt
 		
-		
-		
-		printf("test avec fichier '%s' en cours", fichier_test);
+		printf("adapter avec fichier '%s' en cours", fichier_vad);
+		nb=0;
 		i=0;
-		do {
-			fscanf(file_test,"%f,%f,%f",&fvalue[0],&fvalue[1],&fvalue[2]);
+		
+		while(fscanf(file_vad,"%f,%f,%f",&fvalue[0],&fvalue[1],&fvalue[2]) == 3){
+			printf("\n =====================input = %f,%f,%f =========================\n",fvalue[0], fvalue[1], fvalue[2]);
+			ares=validation(&tree,feature,fvalue);
+			ind = (fvalue[2]==ares)?1:0;
+			fprintf(file_result,"%f,%f,%f,%d,%d\n",fvalue[0], fvalue[1], fvalue[2],ares, ind);
+			nb = nb + ind;
+			i++;
+		} // lecture ligne par ligne du fichier txt
+		if(!feof(file_vad)){
+		fprintf(stderr, "ERREUR : Impossible de lire la validation file\n");
+		}
+		printf("vvvvvvvvvvvvvvvvv  right rate=%f\n",nb/(i*1.0));
+		
+		/*
+		printf("test avec fichier '%s' en cours", fichier_test);
+		nb=0;
+		i=0;
+		while(fscanf(file_test,"%f,%f,%f",&fvalue[0],&fvalue[1],&fvalue[2]) == 3){
 			printf("\n =====================input = %f,%f,%f =========================\n",fvalue[0], fvalue[1], fvalue[2]);
 			combineres = prediction(tree,feature,fvalue);
 			ind = (fvalue[2]==combineres->result)?1:0;
 			fprintf(file_result,"%f,%f,%f,%d,%d\n",fvalue[0], fvalue[1], fvalue[2],combineres->result,ind);
 			nb = nb + ind;
 			i++;
-		} while (!feof(file_test)); // lecture ligne par ligne du fichier txt
-		printf("vvvvvvvvvvvvvvvvv  right rate=%f\n",nb/(i*1.0));
+		} // lecture ligne par ligne du fichier txt
+		if(!feof(file_test)){
+		fprintf(stderr, "ERREUR : Impossible de lire la test file\n");
+		}
+		printf("vvvvvvvvvvvvvvvvv  right rate=%d/%i==%f\n",nb,i,nb/(i*1.0));
 		
+		*/
 		
-		
-		
+		//changenode(&tree);
 		
 		putchar('\n');
 	
