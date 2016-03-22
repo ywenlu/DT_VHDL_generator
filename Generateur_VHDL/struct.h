@@ -41,10 +41,7 @@
  * Le programme realise un arbre binaire a partir du fichier en entree
  */
 
-/**
- * @typedef noeud
- * @brief Structure noeud, equivaut a \e struct \e noeud
- */
+
 
 /**
  * @typedef ptr_noeud
@@ -54,17 +51,10 @@
 typedef struct noeud {
 	char * label;		/**< Numero du noeud, unique pour chaque noeud */
 	char * feature;	/**< Nom du signal a  analyser */
-<<<<<<< HEAD
 	float min;			/**< Valeur du changement de la pente (minimum) */
 	float max;			/**< Valeur du changement de la pente (maximum) */
 	float a;			/**< Coefficient direction de la fonction d'appartenance */
 	float b;			/**< Valeur Ã  l'origine de la fonction d'appartenance */
-=======
-	int min;			/**< Valeur du changement de la pente (minimum) */
-	int max;			/**< Valeur du changement de la pente (maximum) */
-	int a;			/**< Coefficient direction de la fonction d'appartenance */
-	int b;			/**< Valeur Ã  l'origine de la fonction d'appartenance */
->>>>>>> parent of 5b50029... Without arrondisement
 	struct noeud * pere;/**< Pointeur sur le père */
 	struct noeud * fils_g;	/**< Pointeur sur le fils gauche */
 	struct noeud * fils_d;	/**< Pointeur sur le fils droit */
@@ -127,11 +117,7 @@ typedef struct arbre {
  * @return Noeud cree
  */
 
-<<<<<<< HEAD
 ptr_noeud create_noeud (char label[], char feature[], float min, float max, float a, float b);
-=======
-ptr_noeud create_noeud (char label[], char feature[], int min, int max, int a, int b);
->>>>>>> parent of 5b50029... Without arrondisement
 
 /**
  * @fn create_feuille (char label[], int yes, int no)

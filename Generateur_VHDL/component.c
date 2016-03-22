@@ -322,17 +322,10 @@ void vhdl_inst_mu_A (FILE * file, ptr_noeud node, char * entity) {
 
 		fprintf (file, "func%s : %s_mu_A\n\t"
 				"GENERIC MAP (\n\t\t"
-<<<<<<< HEAD
 				"a => %f,\n\t\t"
 				"b => %f,\n\t\t"
 				"max => %f,\n\t\t"
 				"min => %f,\n\t\t"
-=======
-				"a => %d,\n\t\t"
-				"b => %d,\n\t\t"
-				"max => %d,\n\t\t"
-				"min => %d,\n\t\t"
->>>>>>> parent of 5b50029... Without arrondisement
 				"N => %d\n\t"
 				")\n\t"
 				"PORT MAP (\n\t\t"

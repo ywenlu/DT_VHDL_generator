@@ -5,11 +5,8 @@
 
 #include "struct.h"
 
-<<<<<<< HEAD
+
 ptr_noeud create_noeud (char label[], char feature[], float min, float max, float a, float b) {
-=======
-ptr_noeud create_noeud (char label[], char feature[], int min, int max, int a, int b) {
->>>>>>> parent of 5b50029... Without arrondisement
 	ptr_noeud tmp;
 
 	tmp = (ptr_noeud) malloc (sizeof (noeud));

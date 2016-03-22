@@ -148,16 +148,7 @@ ptr_noeud feuillepere (ptr_noeud tete, char *label){
 }
 */
 
-void feuillepere (ptr_noeud tete, ptr_noeud *pere, char *label){
-	if (tete==NULL)
-		return;
-	else {
-		if(!strcmp(tete->label,label)) 
-			*pere=tete;
-	}
-	feuillepere (tete->fils_g, pere, label);
-	feuillepere (tete->fils_d, pere, label);
-}
+
 
 void changeseuil(ptr_noeud *node, float value){
 	
@@ -168,7 +159,7 @@ void changeseuil(ptr_noeud *node, float value){
 		delta = value - (*node)->min;
 	else
 		delta = value - (*node)->max;
-	//delta=delta/((10.0)*f+1);
+		delta=delta/((10.0)*f+1);
 	
 	(*node)->max = (*node)->max + delta;
 	(*node)->min = (*node)->min + delta;
@@ -181,7 +172,7 @@ void changenode(ptr_arbre *tree, float value)
 	changeseuil(&((*tree)->node),15);
 }
 * */
-
+/*
 int validation(ptr_arbre *tree,char *feature[],float * fvalue){
 	ptr_feuille leaf; 
 	ptr_feuilleagg leafagg;
@@ -299,7 +290,7 @@ int validation(ptr_arbre *tree,char *feature[],float * fvalue){
 		}
 		return allleafagg->result;
 		
-}
+}*/
 /*
  * void adaption(ptr_combiner *combineres,char *feature[],float * fvalue){
 		int v;
@@ -309,6 +300,7 @@ int validation(ptr_arbre *tree,char *feature[],float * fvalue){
 		//changeseuil(&node,value);
 	}
 	* */
+	/*
 ptr_combiner prediction(ptr_arbre tree,char *feature[],float * fvalue){
 	ptr_feuille leaf; 
 	ptr_feuilleagg leafagg;
@@ -408,6 +400,141 @@ ptr_combiner prediction(ptr_arbre tree,char *feature[],float * fvalue){
 		
 		return allleafagg;
 }
-	
+*/
+void feuillepere (ptr_noeud tete, ptr_noeud *pere, char *label){
+	if (tete==NULL)
+		return;
+	else {
+		if(!strcmp(tete->label,label)) 
+			*pere=tete;
+	}
+	feuillepere (tete->fils_g, pere, label);
+	feuillepere (tete->fils_d, pere, label);
+}
 
+void mincompo(ptr_arbre tree,char *label, char *feature[],float * fvalue, char *minlabel, float *min, ptr_noeud *minnode){
+	int l=strlen(label);
+	int tl;
+	char **list_node;
+	ptr_noeud tmpnode;
+	int sens;
+	char tlabel[NB_CHAR];
+	float tmpvalue,tmpdeg;
+	int i;
+	*min=1;
+	//printf("#########min %f\n",(*min));
+	list_node = malloc((l-1)*sizeof(char*));
+	 for(i=0; i<(l-1); i++){
+		list_node[i]=malloc(NB_CHAR*sizeof(char));
+		memset(list_node[i],0,NB_CHAR);
+		strncpy(list_node[i], label, l-i); 
+	 }
+ 
+	 
+	 for(i=0; i<(l-1); i++){
+		 memset(tlabel,0,NB_CHAR);
+		 tl=strlen(list_node[i]);
+		 sens=(int)(list_node[i])[tl-1]-(int)'0'; 
+		 strncpy(tlabel,list_node[i],tl-1);
+		 feuillepere (tree->node,&tmpnode,tlabel);
+		 //printf("nowlabel=%s\n",tlabel);
+		 //printf("node in from leaf  ");
+		 print_noeud(tmpnode);
+		 tmpvalue=getfvalue(tmpnode,feature,fvalue);
+		 tmpdeg=appartenance (tmpnode, tmpvalue);
+		 printf("tmpdeg=%f  sens=%d\n",tmpdeg,sens);
+		 tmpdeg=(sens==0)?tmpdeg:(1-tmpdeg);
+		 printf("tmpvalue= %f  tmpdeg=%f <=  minglobal=%f  hellohappy\n",tmpvalue,tmpdeg,*min);
+		 if(tmpdeg<=(*min)){
+			 print_noeud(tmpnode);
+			 (*minnode)=tmpnode;
+			 *min = tmpdeg;
+		     strcpy(minlabel,tlabel);
+		 }
+	 }
+	 //printf("==================min of this leaf %f  \n",*min);
+	  for(int i=0; i<(l-1); i++){
+		free(list_node[i]);
+		}
+	  free(list_node);
+	  
+}
+
+int prediction(ptr_arbre tree,char *feature[],float * fvalue){
+	ptr_feuille leaf;
+	ptr_feuille cleaf;
+	ptr_noeud minnode=tree->node;
+	char minlabel[NB_CHAR];
+	char maxlabel[NB_CHAR];
+	float tmin,max;
+	int result=0;
+	max=0;
+	tmin=1;
+	leaf=tree->leaf; 
+	while (leaf != NULL) { // iterate over all leaves
+		print_feuille(leaf);	
+		mincompo(tree, leaf->label, feature, fvalue, minlabel, &tmin, &minnode);
+		
+		if (tmin>max) {
+			//printf("######## %f >=  max=%f\n",tmin, max);
+			cleaf=leaf;
+			max=tmin;
+			strcpy(maxlabel,minlabel);
+		}
+		leaf=leaf->suiv;	
+	}
+	
+	if (cleaf->yes >= cleaf->no) result =1;
+	else result = 2;
+	return result;
+}
+
+int adaption(ptr_arbre *tree,char *feature[],float * fvalue){
+	ptr_feuille leaf;
+	ptr_feuille cleaf;
+	ptr_noeud minnode=(*tree)->node;
+	ptr_noeud selnode;
+	char minlabel[NB_CHAR];
+	char maxlabel[NB_CHAR];
+	float tmin,max,tmp;
+	int result=0;
+	max=0;
+	
+	leaf=(*tree)->leaf; 
+	while (leaf != NULL) { // iterate over all leaves
+		print_feuille(leaf);
+		
+		mincompo((*tree), leaf->label, feature, fvalue, minlabel, &tmin, &minnode);
+		if (tmin>=max) {
+			cleaf=leaf;
+			selnode=minnode;
+			printf("hellohappy\n");
+			print_noeud(minnode);
+			printf("hellohappy\n");
+			print_noeud(selnode);
+			max=tmin;
+			strcpy(maxlabel,minlabel);
+		}
+		leaf=leaf->suiv;
+	}
+	if (cleaf->yes >= cleaf->no) result =1;
+	else result = 2;
+	
+	if (fvalue[2]!=result) {//quand mal classé
+			
+			printf("!!!!!!!!!!!mal classé\n");
+			print_noeud(selnode);
+					//if(allleafagg->deg<1)
+					
+					tmp=getfvalue(selnode,feature,fvalue);
+					printf("avant: ");
+					print_noeud(selnode);
+					changeseuil(&selnode,tmp);
+					printf("apres: ");
+					print_noeud(selnode);
+					
+					//printf("error");
+		}
+	return result;
+}
 

@@ -12,6 +12,8 @@ extern int profondeur_max;
 extern int prof_max_global;
 
 extern int compt;
+extern int nb_node;
+extern int nb_leaf;
 
 ptr_arbre read_ligne (char * ligne, ptr_arbre tree, int reset) {
 	ptr_noeud tmp_n;
@@ -116,8 +118,8 @@ ptr_arbre read_ligne (char * ligne, ptr_arbre tree, int reset) {
 		b = 0;
 	}
 	else {
-		a = 100.0 / (max - min); // calculer le coefficient directeur
-		b = - arrondi(a) * min; // calculer la valeur à l'origine
+		a = 1 / (max - min); // calculer le coefficient directeur
+		b = - a * min; // calculer la valeur à l'origine
 	}
 
 	f = (char *) malloc (NB_CHAR * sizeof(char));
@@ -131,7 +133,8 @@ ptr_arbre read_ligne (char * ligne, ptr_arbre tree, int reset) {
 	l = strncpy (l, label, NB_CHAR);
 
 	if (sens == 0) { // ajouter un noeud à gauche
-		tmp_n = create_noeud (l, f, (int) min, (int) max, arrondi(a), arrondi(b));
+		tmp_n = create_noeud (l, f, min, max, a, b);
+		nb_node++;
 		tree->node = add_noeud (tree->node, tmp_n);
 	}
 
@@ -189,6 +192,7 @@ ptr_arbre read_ligne (char * ligne, ptr_arbre tree, int reset) {
 			label_feuille = strncat (label_feuille, "0", NB_CHAR);
 		}
 		tmp_f = create_feuille (label_feuille, yes, no);
+		nb_leaf++;
 		tree->leaf = add_feuille (tree->leaf, tmp_f);
 		
 		compt = compt + 1;
@@ -199,13 +203,8 @@ ptr_arbre read_ligne (char * ligne, ptr_arbre tree, int reset) {
 
 
 void print_noeud (ptr_noeud node) {
-<<<<<<< HEAD
 	printf ("*node: label = %s, feature = %s, "
 			"min = %f, max = %f, a = %f, b = %f\n",
-=======
-	printf ("label = %16s, feature = %8s, "
-			"min = %6d, max = %6d, a = %6d, b = %8d\n",
->>>>>>> parent of 5b50029... Without arrondisement
 		node->label, node->feature, node->min, node->max, node->a, node->b);
 }
 
@@ -219,7 +218,7 @@ void print_feuille (ptr_feuille leaf) {
 
 void write_csv (FILE * file, ptr_noeud node) {
 	if (node != NULL) {
-		fprintf (file, "%s;%s;%d;%d\n",
+		fprintf (file, "%s;%s;%f;%f\n",
 			node->label, node->feature, node->min, node->max);        // modifier pour changer la precision
 		write_csv (file, node->fils_g);
 		write_csv (file, node->fils_d);
@@ -229,7 +228,7 @@ void write_csv (FILE * file, ptr_noeud node) {
 void write_vhd (FILE * file, ptr_arbre tree, char * entity) {
 
 	ptr_feuille leaf;
-	ptr_noeud node;
+	//ptr_noeud node;
 
 	// déclaration des composants
 	vhdl_emotion (file, entity);
@@ -246,7 +245,7 @@ void write_vhd (FILE * file, ptr_arbre tree, char * entity) {
 	// instanciation des composants
 	vhdl_signal_taux (file, tree);
 	vhdl_inst_memory (file, entity);
-	node = tree->node;
+	//node = tree->node;
 	vhdl_inst_mu_A (file, tree->node, entity);
 	leaf = tree->leaf;
 	
