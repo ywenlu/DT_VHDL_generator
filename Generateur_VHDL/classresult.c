@@ -8,6 +8,7 @@
 
 extern int compt;
 extern int N;
+extern int profondeur;
 
 float getfvalue(ptr_noeud node,char *feature[],float *fvalue){
 	int i=0;
@@ -150,16 +151,16 @@ ptr_noeud feuillepere (ptr_noeud tete, char *label){
 
 
 
-void changeseuil(ptr_noeud *node, float value){
+void changeseuil(ptr_noeud *node, float value, int f){
 	
-	float delta,f;
+	float delta,span;
 	//printf("avant %f  %f\n",(*node)->min,(*node)->max);
-	f = (*node)->max - (*node)->min;
+	span = (*node)->max - (*node)->min;
 	if ((value - (*node)->min)>((*node)->max - value))
 		delta = value - (*node)->min;
 	else
 		delta = value - (*node)->max;
-		delta=delta/((10.0)*f+1);
+		delta=delta/(f*span+1);
 	
 	(*node)->max = (*node)->max + delta;
 	(*node)->min = (*node)->min + delta;
@@ -439,14 +440,14 @@ void mincompo(ptr_arbre tree,char *label, char *feature[],float * fvalue, char *
 		 feuillepere (tree->node,&tmpnode,tlabel);
 		 //printf("nowlabel=%s\n",tlabel);
 		 //printf("node in from leaf  ");
-		 print_noeud(tmpnode);
+		 //print_noeud(tmpnode);
 		 tmpvalue=getfvalue(tmpnode,feature,fvalue);
 		 tmpdeg=appartenance (tmpnode, tmpvalue);
-		 printf("tmpdeg=%f  sens=%d\n",tmpdeg,sens);
+		 //printf("tmpdeg=%f  sens=%d\n",tmpdeg,sens);
 		 tmpdeg=(sens==0)?tmpdeg:(1-tmpdeg);
-		 printf("tmpvalue= %f  tmpdeg=%f <=  minglobal=%f  hellohappy\n",tmpvalue,tmpdeg,*min);
+		 //printf("tmpvalue= %f  tmpdeg=%f <=  minglobal=%f  hellohappy\n",tmpvalue,tmpdeg,*min);
 		 if(tmpdeg<=(*min)){
-			 print_noeud(tmpnode);
+			 //print_noeud(tmpnode);
 			 (*minnode)=tmpnode;
 			 *min = tmpdeg;
 		     strcpy(minlabel,tlabel);
@@ -471,8 +472,10 @@ int prediction(ptr_arbre tree,char *feature[],float * fvalue){
 	max=0;
 	tmin=1;
 	leaf=tree->leaf; 
+	profondeur=0;
 	while (leaf != NULL) { // iterate over all leaves
-		print_feuille(leaf);	
+		//print_feuille(leaf);
+		profondeur = (strlen(leaf->label)>profondeur) ? (strlen(leaf->label)) : profondeur;	
 		mincompo(tree, leaf->label, feature, fvalue, minlabel, &tmin, &minnode);
 		
 		if (tmin>max) {
@@ -489,7 +492,7 @@ int prediction(ptr_arbre tree,char *feature[],float * fvalue){
 	return result;
 }
 
-int adaption(ptr_arbre *tree,char *feature[],float * fvalue){
+int adaption(ptr_arbre *tree,char *feature[],float * fvalue, int f){
 	ptr_feuille leaf;
 	ptr_feuille cleaf;
 	ptr_noeud minnode=(*tree)->node;
@@ -501,17 +504,18 @@ int adaption(ptr_arbre *tree,char *feature[],float * fvalue){
 	max=0;
 	
 	leaf=(*tree)->leaf; 
+	profondeur=0;
 	while (leaf != NULL) { // iterate over all leaves
-		print_feuille(leaf);
-		
+		//print_feuille(leaf);
+		profondeur = (strlen(leaf->label)>profondeur) ? (strlen(leaf->label)) : profondeur;
 		mincompo((*tree), leaf->label, feature, fvalue, minlabel, &tmin, &minnode);
 		if (tmin>=max) {
 			cleaf=leaf;
 			selnode=minnode;
-			printf("hellohappy\n");
-			print_noeud(minnode);
-			printf("hellohappy\n");
-			print_noeud(selnode);
+			//printf("hellohappy\n");
+			//print_noeud(minnode);
+			//printf("hellohappy\n");
+			//print_noeud(selnode);
 			max=tmin;
 			strcpy(maxlabel,minlabel);
 		}
@@ -522,18 +526,16 @@ int adaption(ptr_arbre *tree,char *feature[],float * fvalue){
 	
 	if (fvalue[2]!=result) {//quand mal classé
 			
-			printf("!!!!!!!!!!!mal classé\n");
-			print_noeud(selnode);
+			//printf("!!!!!!!!!!!mal classé\n");
+			//print_noeud(selnode);
 					//if(allleafagg->deg<1)
 					
 					tmp=getfvalue(selnode,feature,fvalue);
-					printf("avant: ");
-					print_noeud(selnode);
-					changeseuil(&selnode,tmp);
-					printf("apres: ");
-					print_noeud(selnode);
-					
-					//printf("error");
+					//printf("avant: ");
+					//print_noeud(selnode);
+					changeseuil(&selnode,tmp,f);
+					//printf("apres: ");
+					//print_noeud(selnode);
 		}
 	return result;
 }

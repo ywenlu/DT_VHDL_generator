@@ -15,6 +15,7 @@ extern int compt;
 extern int nb_node;
 extern int nb_leaf;
 
+
 ptr_arbre read_ligne (char * ligne, ptr_arbre tree, int reset) {
 	ptr_noeud tmp_n;
 	ptr_feuille tmp_f;

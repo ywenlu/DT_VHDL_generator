@@ -50,8 +50,8 @@ ptr_combiner create_combiner (ptr_feuilleagg leafagg);
 void feuillepere (ptr_noeud tete, ptr_noeud *pere, char *label);
 //ptr_noeud feuillepere (ptr_noeud tete, char *label);
 int prediction(ptr_arbre tree,char *feature[],float * fvalue);
-int adaption(ptr_arbre *tree,char *feature[],float * fvalue);
+int adaption(ptr_arbre *tree,char *feature[],float * fvalue,int f);
 //int validation(ptr_arbre *tree,char *feature[],float * fvalue);
-void changeseuil(ptr_noeud *node, float value);
+void changeseuil(ptr_noeud *node, float value, int f);
 void mincompo(ptr_arbre tree,char *label, char *feature[],float * fvalue, char *minlabel, float *min, ptr_noeud *minnode);
 #endif
